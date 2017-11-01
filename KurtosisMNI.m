@@ -33,6 +33,7 @@ for m=1:numel(subjects)
     metainfo(r).subject=subjects(m);
     metainfo(r).hand='right';
     metainfo(r).tms=stormdb_get_subjectmeta(dbhandle, project, subjects(m), 'group'); % 1="M1" 2="SPL" 3="M1Control"
+    metainfo(r).day='1';
     metainfo(r).project=project;
     metainfo(r).branch='mar4';
     metainfo(r).parameter=jobstruct(m).fittype;
@@ -43,6 +44,7 @@ for m=1:numel(subjects)
         metainfo(r).subject=subjects(m);
         metainfo(r).hand='right';
         metainfo(r).tms=stormdb_get_subjectmeta(dbhandle, project, subjects(m), 'group'); % 1="M1" 2="SPL" 3="M1Control"
+        metainfo(r).day='2';
         metainfo(r).project=project;
         metainfo(r).branch='mar4';
         metainfo(r).parameter=jobstruct(m).fittype;
