@@ -55,7 +55,7 @@ logging.info('Cross validation set up.')
 # 3. CREATE AND FIT MODEL
 # Define SpaceNetClassifier with tv-l1/graph-net penalty
 decoder = SpaceNetClassifier(cv=cv, memory="nilearn_cache", penalty='tv-l1',
-                            memory_level=2, n_jobs=1, mask=mnimask)
+                            memory_level=2, n_jobs=1, verbose=2, mask=mnimask)
 logging.info('Classifier set up. Starting model fit.')
 decoder.fit(X, y)  # fit
 logging.info('Model fit complete. Saving outputs...')
