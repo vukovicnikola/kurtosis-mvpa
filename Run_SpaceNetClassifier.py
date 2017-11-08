@@ -29,7 +29,7 @@ inputdata = pd.read_csv("MDinfo.csv")
 # Select a subset of data based on testing day and tms group (1=M1,2=SPL,3=M1Control)
 testday = 1 # select data from day 1 or 2
 excludegroup = 3 # analyse groups 1 and 2
-datasubset = inputdata.query('day==testday & tms!=excludegroup')
+datasubset = inputdata.query('day==@testday & tms!=@excludegroup')
 # Get array X of .nii file paths from the "image" column
 X = np.array(datasubset['image'])
 # Get array Y of subject group indices (1=M1,2=SPL,3=M1Control)
