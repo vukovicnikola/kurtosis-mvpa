@@ -27,7 +27,9 @@ os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
 # Load the csv containing participant info and file paths
 inputdata = pd.read_csv("MDinfo.csv")
 # Select a subset of data based on testing day and tms group (1=M1,2=SPL,3=M1Control)
-datasubset = inputdata.query('day==2 & tms!=3')
+testday = 1 # select data from day 1 or 2
+excludegroup = 3 # analyse groups 1 and 2
+datasubset = inputdata.query('day==testday & tms!=excludegroup')
 # Get array X of .nii file paths from the "image" column
 X = np.array(datasubset['image'])
 # Get array Y of subject group indices (1=M1,2=SPL,3=M1Control)
@@ -65,13 +67,13 @@ logging.info('Model fit complete. Saving outputs...')
 # Save decoder object
 decoder_dir = './decoder/' # directory
 if not os.path.exists(decoder_dir): os.makedirs(decoder_dir) # create if missing
-dec_filename = '%s%s_decoder_SpaceNet_%s.jbl' %(decoder_dir,timestamp, decoder.penalty)
+dec_filename = '%s%s_decoder_SpaceNet_%s_day%d.jbl' %(decoder_dir,timestamp, decoder.penalty, testday)
 joblib.dump(decoder, dec_filename)
 
 # Save coefficients to nifti file
 coef_dir = './coefs/' # directory
 if not os.path.exists(coef_dir): os.makedirs(coef_dir) # create if missing
-coef_filename = '%s%s_coefs_SpaceNet_%s.nii' %(coef_dir,timestamp, decoder.penalty)
+coef_filename = '%s%s_coefs_SpaceNet_%s_day%d.nii' %(coef_dir,timestamp, decoder.penalty, testday)
 coef_img = decoder.coef_img_
 coef_img.to_filename(coef_filename)
 logging.info('All outputs saved.')
