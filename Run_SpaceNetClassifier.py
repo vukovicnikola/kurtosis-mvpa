@@ -11,10 +11,17 @@ from sklearn.cross_validation import StratifiedKFold
 from nilearn.decoding import SpaceNetClassifier
 from sklearn.externals import joblib
 
-# SETUP LOGGING
 # Go to project working directory (file paths will be relative)
 os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
 
+# Load the MNI template brain, and the corresponding masks
+mnibrain = './mni152_template/mni_152_t1_brain.nii'
+mnibrainmask = './mni152_template/mni_152_t1_mask.nii'
+mnigm = './mni152_template/mni_152_gm_mask.nii'
+mniwm = './mni152_template/mni_152_wm_mask.nii'
+mnicsf = './mni152_template/mni_152_csf_mask.nii'
+
+# SETUP LOGGING
 # Get timestamp as string
 timestamp = time.strftime('%Y%m%d-%H%M%S')
 logname = './%s_SpaceNet_log.txt' %(timestamp)
@@ -29,12 +36,14 @@ testday = 1 # select data from day 1 or 2
 excludegroup = 3 # analyse groups 1 and 2
 num_folds = 10 # number of KFolds
 fitpenalty = 'tv-l1' # regularisation using tv-l1 or graph-net
+maskname = 'GM' # mask name string
+mnimask = mnigm # mask data for model fit: mnigm, mniwm, mnicsf, mnibrainmask
 
 ######################################################################
 
 # 1. LOAD THE DATA
 # Load csv
-inputdata = pd.read_csv(@inputcsv)
+inputdata = pd.read_csv(inputcsv)
 # Select a subset of data based on testing day and tms group (1=M1,2=SPL,3=M1Control)
 datasubset = inputdata.query('day==@testday & tms!=@excludegroup')
 # Get array X of .nii file paths from the "image" column
@@ -48,12 +57,6 @@ logging.info('Data loaded.')
 perm = np.argsort(y)
 y = y[perm]
 X = X[perm]
-
-# Load the MNI template brain, and the corresponding mask
-mnibrain = "./mni152_template/mni_152_t1_brain.nii"
-mnimask = "./mni152_template/mni_152_t1_mask.nii"
-
-logging.info('MNI template and mask loaded.')
 
 # 2. CONSTRUCT TRAINING & TEST DATA
 # Use StratifiedKFold cross-validation generator: 10 splits
@@ -74,24 +77,13 @@ logging.info('Model fit complete. Saving outputs...')
 # Save decoder object
 decoder_dir = './decoder/' # directory
 if not os.path.exists(decoder_dir): os.makedirs(decoder_dir) # create if missing
-dec_filename = '%s%s_decoder_SpaceNet_%s_day%d.jbl' %(decoder_dir,timestamp, decoder.penalty, testday)
+dec_filename = '%s%s_decoder_SpaceNet_%s_day%d_%s.jbl' %(decoder_dir,timestamp, decoder.penalty, testday, maskname)
 joblib.dump(decoder, dec_filename)
 
 # Save coefficients to nifti file
 coef_dir = './coefs/' # directory
 if not os.path.exists(coef_dir): os.makedirs(coef_dir) # create if missing
-coef_filename = '%s%s_coefs_SpaceNet_%s_day%d.nii' %(coef_dir,timestamp, decoder.penalty, testday)
+coef_filename = '%s%s_coefs_SpaceNet_%s_day%d_%s.nii' %(coef_dir,timestamp, decoder.penalty, testday, maskname)
 coef_img = decoder.coef_img_
 coef_img.to_filename(coef_filename)
 logging.info('All outputs saved.')
-
-
-
-
-# TODO: VISUALISE COEFICIENTS
-'''coef_img = decoder.coef_img_
-plot_stat_map(coef_img, background_img,
-              title='SpaceNet Coeficients',
-              cut_coords=(-52, -5), display_mode='yz')
-
-# for 3d surface plots, see: http://nilearn.github.io/auto_examples/01_plotting/plot_surf_stat_map.html '''
