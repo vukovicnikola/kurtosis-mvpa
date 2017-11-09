@@ -11,7 +11,10 @@ from sklearn.cross_validation import StratifiedKFold
 from nilearn.decoding import SpaceNetClassifier
 from sklearn.externals import joblib
 
-# 0. SETUP LOGGING
+# SETUP LOGGING
+# Go to project working directory (file paths will be relative)
+os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
+
 # Get timestamp as string
 timestamp = time.strftime('%Y%m%d-%H%M%S')
 logname = './%s_SpaceNet_log.txt' %(timestamp)
@@ -20,15 +23,19 @@ logging.basicConfig(filename=logname,
                     format='%(asctime)s - %(levelname)s : %(message)s',
                     datefmt='%d %b %Y %H:%M:%S')
 
-# 1. LOAD THE DATA
-# Go to project working directory (file paths are relative)
-os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
-
-# Load the csv containing participant info and file paths
-inputdata = pd.read_csv("MDinfo.csv")
-# Select a subset of data based on testing day and tms group (1=M1,2=SPL,3=M1Control)
+# 0. ANALYSIS PARAMETERS
+inputcsv = 'MDinfo.csv' # csv containing participant info and file paths
 testday = 1 # select data from day 1 or 2
 excludegroup = 3 # analyse groups 1 and 2
+num_folds = 10 # number of KFolds
+fitpenalty = 'tv-l1' # regularisation using tv-l1 or graph-net
+
+######################################################################
+
+# 1. LOAD THE DATA
+# Load csv
+inputdata = pd.read_csv(@inputcsv)
+# Select a subset of data based on testing day and tms group (1=M1,2=SPL,3=M1Control)
 datasubset = inputdata.query('day==@testday & tms!=@excludegroup')
 # Get array X of .nii file paths from the "image" column
 X = np.array(datasubset['image'])
@@ -50,14 +57,14 @@ logging.info('MNI template and mask loaded.')
 
 # 2. CONSTRUCT TRAINING & TEST DATA
 # Use StratifiedKFold cross-validation generator: 10 splits
-cv = StratifiedKFold(n_folds=10,y=y)
+cv = StratifiedKFold(n_folds=num_folds,y=y)
 
 logging.info('Cross validation set up.')
 
 # 3. CREATE AND FIT MODEL
 # Define SpaceNetClassifier with tv-l1/graph-net penalty
-decoder = SpaceNetClassifier(cv=cv, memory="nilearn_cache", penalty='tv-l1',
-                            memory_level=2, n_jobs=1, verbose=2, mask=mnimask)
+decoder = SpaceNetClassifier(cv=cv, memory="nilearn_cache", penalty=fitpenalty,
+                            memory_level=2, n_jobs=1, mask=mnimask)
 logging.info('Classifier set up. Starting model fit.')
 decoder.fit(X, y)  # fit
 logging.info('Model fit complete. Saving outputs...')
