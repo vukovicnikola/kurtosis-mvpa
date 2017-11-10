@@ -17,9 +17,9 @@ os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
 # Load the MNI template brain, and the corresponding masks
 mnibrain = './mni152_template/mni_152_t1_brain.nii'
 mnibrainmask = './mni152_template/mni_152_t1_mask.nii'
-mnigm = './mni152_template/mni_152_gm_mask.nii'
-mniwm = './mni152_template/mni_152_wm_mask.nii'
-mnicsf = './mni152_template/mni_152_csf_mask.nii'
+mnigm = './mni152_template/mni_152_gm_50mask.nii'
+mniwm = './mni152_template/mni_152_wm_50mask.nii'
+mnicsf = './mni152_template/mni_152_csf_50mask.nii'
 
 # SETUP LOGGING
 # Get timestamp as string
