@@ -39,6 +39,7 @@ fitpenalty = 'tv-l1' # regularisation using tv-l1 or graph-net
 maskname = 'GM' # mask name string
 mnimask = mnigm # mask data for model fit: mnigm, mniwm, mnicsf, mnibrainmask
 
+logging.info('Parameters: testday @testday, fit @fitpenalty, mask @maskname')
 ######################################################################
 
 # 1. LOAD THE DATA
