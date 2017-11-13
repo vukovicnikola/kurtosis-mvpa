@@ -16,10 +16,9 @@ os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
 
 # Load the MNI template brain, and the corresponding masks
 mnibrain = './mni152_template/mni_152_t1_brain.nii'
-mnibrainmask = './mni152_template/50PercentMasksResampled/rmni_152_t1_mask.nii'
-mnigm = './mni152_template/50PercentMasksResampled/rmni_152_gm_50mask.nii'
-mniwm = './mni152_template/50PercentMasksResampled/rmni_152_wm_50mask.nii'
-mnicsf = './mni152_template/50PercentMasksResampled/rmni_152_csf_50mask.nii'
+mnibrainmask = './mni152_template/30PercentMasksResampled/rmni_152_t1_mask.nii'
+mnigm = './mni152_template/30PercentMasksResampled/rmni_152_gm_30mask.nii'
+mniwm = './mni152_template/30PercentMasksResampled/rmni_152_wm_30mask.nii'
 
 # SETUP LOGGING
 # Get timestamp as string
@@ -34,7 +33,7 @@ logging.basicConfig(filename=logname,
 inputcsv = 'MDinfo.csv' # csv containing participant info and file paths
 testday = 1 # select data from day 1 or 2
 excludegroup = 3 # analyse groups 1 and 2
-num_folds = 9 # number of KFolds
+num_folds = 10 # number of KFolds
 fitpenalty = 'tv-l1' # regularisation using tv-l1 or graph-net
 maskname = 'GM' # mask name string
 mnimask = mnigm # mask data for model fit: mnigm, mniwm, mnicsf, mnibrainmask
