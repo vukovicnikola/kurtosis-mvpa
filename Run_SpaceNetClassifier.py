@@ -38,7 +38,8 @@ screenp = 20 # screening percentile, default 20
 maskname = 'GM30_1mm' # mask name string
 mnimask = mnigm # mask data for model fit: mnigm, mniwm, mnibrainmask
 
-logging.info('Parameters: testday @testday, fit @fitpenalty, folds @num_folds, screen @screenp, maskname @maskname, mask @mnimask')
+logging.info('Params: testday %s, fit %d, folds %d, screen %d, maskname %s, mask %s',
+                testday, fitpenalty, num_folds, screenp, maskname, mnimask)
 ######################################################################
 
 # 1. LOAD THE DATA
