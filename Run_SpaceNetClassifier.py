@@ -15,9 +15,9 @@ from sklearn.externals import joblib
 os.chdir("/projects/MINDLAB2016_TMS-NovelWordKurtosis/scratch/MVPA/")
 
 # Load the MNI masks
-mnibrainmask = './mni152_template/30PercentMasksResampled/rmni_152_t1_mask.nii'
-mnigm = './mni152_template/30PercentMasksResampled/rmni_152_gm_30mask.nii'
-mniwm = './mni152_template/30PercentMasksResampled/rmni_152_wm_30mask.nii'
+mnibrain = './mni152_template/30PercentMasks/mni_152_t1_mask.nii'
+mnigm = './mni152_template/30PercentMasks/mni_152_gm30_1mm.nii'
+mniwm = './mni152_template/30PercentMasks/mni_152_wm30_1mm.nii'
 
 # SETUP LOGGING
 # Get timestamp as string
@@ -35,7 +35,7 @@ excludegroup = 3 # analyse groups 1 and 2
 num_folds = 10 # number of KFolds
 fitpenalty = 'tv-l1' # regularisation using tv-l1 or graph-net
 screenp = 20 # screening percentile, default 20
-maskname = 'GM30' # mask name string
+maskname = 'GM30_1mm' # mask name string
 mnimask = mnigm # mask data for model fit: mnigm, mniwm, mnibrainmask
 
 logging.info('Parameters: testday @testday, fit @fitpenalty, mask @maskname')
@@ -67,7 +67,7 @@ logging.info('Cross validation set up.')
 # 3. CREATE AND FIT MODEL
 # Define SpaceNetClassifier with tv-l1/graph-net penalty
 decoder = SpaceNetClassifier(cv=cv, memory="nilearn_cache", penalty=fitpenalty,
-                            memory_level=2, n_jobs=1, verbose=2, screening_percentile=screenp, mask=mnimask)
+                            memory_level=2, n_jobs=1, verbose=1, screening_percentile=screenp, mask=mnimask)
 logging.info('Classifier set up. Starting model fit.')
 decoder.fit(X, y)  # fit
 logging.info('Model fit complete. Saving outputs...')
